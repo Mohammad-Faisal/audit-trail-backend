@@ -5,6 +5,7 @@ import CommonException from '../../models/CommonException';
 import ErrorCodes from '../../utils/ErrorCodes';
 import { User } from './entities/User';
 import { SuccessResponse } from '../../models/SuccessResponse';
+import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 @Controller('user')
 export class UserController {
@@ -23,6 +24,7 @@ export class UserController {
   }
 
   @Post('createNew')
+  @ApiBody( { required:true , type : CreateUserRequest })
   async createNewUser(@Body() request: CreateUserRequest , @Res() response)   {
 
     const result = await this.userService.addOne(request);
