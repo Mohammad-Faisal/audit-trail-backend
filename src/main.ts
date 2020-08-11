@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { ExceptionsFilter } from './middlewares/exception.filter';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { ConfigService } from '@nestjs/config';
 
 
 async function bootstrap() {
@@ -21,6 +22,12 @@ async function bootstrap() {
 
   app.useGlobalFilters(new ExceptionsFilter());
   app.useGlobalPipes(new ValidationPipe({ transform: true    }));
+
+  const configService = app.get(ConfigService);
+
+  console.log(process.env.NODE_ENV);
+  console.log('the port is   ' , configService.get('PORT'))
+
   await app.listen(3000);
 }
 
