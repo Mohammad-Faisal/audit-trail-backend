@@ -4,18 +4,16 @@ import {UserRepository} from './repositories/user.repository';
 import {Result} from '../../../models/Result';
 import {CreateUserRequest} from './requests/CreateUserRequest';
 import {GetUsersRequest} from "./requests/GetUsersRequest";
-import {UserRoleRepository} from "../privilege/repositories/UserRoleRepository";
 import {UsersDetailsResponse} from "./responses/UsersDetailsResponse";
+import CommonException from "../../../models/CommonException";
+import ErrorCodes from "../../../utils/ErrorCodes";
 
 
 @Injectable()
 export class UserService {
 
 
-    constructor(
-        private readonly userRepository: UserRepository ,
-        private readonly userRoleRepository: UserRoleRepository
-    ) {}
+    constructor(private readonly userRepository: UserRepository ) {}
 
     async getUsers(request: GetUsersRequest):  Promise<Result> {
         const usersListResponse = await this.userRepository.find({
@@ -27,7 +25,7 @@ export class UserService {
     }
 
 
-    async addOne(request: CreateUserRequest): Promise<Result> {
+    async registerNewUser(request: CreateUserRequest): Promise<Result> {
         const user = new User();
         user.name = request.name;
         user.phone = request.phone;
@@ -44,18 +42,11 @@ export class UserService {
             where: {
                 firebaseId:request.requesterFirebaseId
             }
-            , relations:[  "userRoles" ]
+            , relations:[  "" ]
         });
 
-        let userFunctions =[]
-        if(user){
-            for (const role of user.userRoles) {
-                const functionsForRole = await this.userRoleRepository.findOne({where : {code : role.code} ,
-                    relations:["userFunctions"]});
-                userFunctions = [ ...userFunctions , ...functionsForRole.userFunctions ]
-            }
-            user["userFunctions"] = userFunctions;
-        }
+        if(!user) throw new CommonException(ErrorCodes.USER_NOT_FOUND);
+
         const userDetailsResponse = new UsersDetailsResponse(user);
 
         return Result.success(userDetailsResponse)

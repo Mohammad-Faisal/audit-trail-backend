@@ -11,10 +11,6 @@ export class UsersDetailsResponse {
   email="";
 
 
-  userFunctions  =[];
-  userRoles  =[];
-
-
   constructor(data : User) {
     if(data){
 

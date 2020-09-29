@@ -7,12 +7,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import {AuthorizationMiddleware} from "./middlewares/authorization.middleware";
 import {ImageModule} from "./domains/misc/image/image.module";
 import {CommonModule} from "./domains/misc/common/common.module";
-import {PrivilegeModule} from "./domains/user-management/privilege/privilege.module";
 
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
+      imports: [ConfigModule] ,
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
         host: configService.get('DB_URL'),
@@ -33,7 +32,6 @@ import {PrivilegeModule} from "./domains/user-management/privilege/privilege.mod
     UserModule ,
     CommonModule ,
     ImageModule,
-    PrivilegeModule,
   ],
   controllers: [],
   providers: [],
@@ -43,9 +41,9 @@ export class AppModule  implements NestModule{
   configure(consumer: MiddlewareConsumer) {
 
     consumer
-      .apply(LoggerMiddleware , AuthorizationMiddleware)
+        .apply(LoggerMiddleware , AuthorizationMiddleware)
         .exclude({ path: 'api/v1/common/getIdToken', method: RequestMethod.POST })
-      .forRoutes('*');
+        .forRoutes('*');
   }
 
 }

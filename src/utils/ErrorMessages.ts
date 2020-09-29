@@ -4,7 +4,7 @@ export default class ErrorMessages {
 
     static getMessage(errorCode : number){
         switch (errorCode){
-            case ErrorCodes.INVALID_USER_INFO : return "Community Not Found"
+            case ErrorCodes.USER_NOT_FOUND : return "User Info Not Found"
             default : return "Some Error Occurred";
         }
     }
