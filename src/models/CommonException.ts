@@ -1,9 +1,11 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 
 export default class CommonException extends HttpException{
-  errorCode :number = 10000;
-  constructor(message :string , errorCode ? : number) {
-    super(message, 460);
+  errorCode  = 10000;
+  errorMessage  = "";
+  constructor( errorCode : number , errorMessage? : string) {
+    super("Some Error Occurred", 460);
     this.errorCode = errorCode;
+    this.errorMessage = errorMessage;
   }
 }
