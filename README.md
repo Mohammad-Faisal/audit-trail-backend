@@ -1,5 +1,6 @@
 ## Description
-This is a Nest Js Template Project
+This is a Nest Js Template Project Which is ready to be connected with a database
+it also has connection to firebase admin adn aws sdk.
 
 ## Installation
 
@@ -40,6 +41,7 @@ yarn start:prod
  3. For Storage aws s3 is used with the help of library aws-sdk
  4. For Validation of Incoming requests class-validator and class-transformer library is used
  5. the api documentation is done using swagger.
- 6. The flow of the requests are middlewares -> guardd -> controller -> service -> repository
+ 7. The environment files can be found under the folder env
+ 8. The flow of the requests are middlewares -> guardd -> controller -> service -> repository
 ```
 
