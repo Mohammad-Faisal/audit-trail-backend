@@ -5,10 +5,10 @@ export class CreateUserRequest {
 
   @ApiModelProperty()
   @IsNotEmpty()
-  firstName: string;
+  name: string;
 
   @ApiModelProperty()
   @IsNotEmpty()
-  lastName: string;
+  phone: string;
 
 }

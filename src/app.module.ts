@@ -1,9 +1,13 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import {MiddlewareConsumer, Module, NestModule, RequestMethod} from '@nestjs/common';
 
-import { UserModule } from './domains/user/user.module';
+import { UserModule } from './domains/user-management/user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import {AuthorizationMiddleware} from "./middlewares/authorization.middleware";
+import {ImageModule} from "./domains/misc/image/image.module";
+import {CommonModule} from "./domains/misc/common/common.module";
+import {PrivilegeModule} from "./domains/user-management/privilege/privilege.module";
 
 @Module({
   imports: [
@@ -27,6 +31,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       envFilePath: `env/${process.env.NODE_ENV || 'development'}.env`
     }),
     UserModule ,
+    CommonModule ,
+    ImageModule,
+    PrivilegeModule,
   ],
   controllers: [],
   providers: [],
@@ -34,8 +41,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 export class AppModule  implements NestModule{
 
   configure(consumer: MiddlewareConsumer) {
+
     consumer
-      .apply(LoggerMiddleware)
+      .apply(LoggerMiddleware , AuthorizationMiddleware)
+        .exclude({ path: 'api/v1/common/getIdToken', method: RequestMethod.POST })
       .forRoutes('*');
   }
 

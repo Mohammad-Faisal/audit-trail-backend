@@ -1,7 +1,7 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response } from 'express';
 import * as admin from 'firebase-admin';
-import { UserService } from '../domains/user-management/user/user.service';
+import {UserService} from "../domains/user-management/user/user.service";
 
 
 @Injectable()

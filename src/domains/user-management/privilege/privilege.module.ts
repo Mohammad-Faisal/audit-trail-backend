@@ -4,7 +4,7 @@ import { PrivilegeService } from './privilege.service';
 import {TypeOrmModule} from "@nestjs/typeorm";
 import {UserFunctionRepository} from "./repositories/UserFunctionRepository";
 import {UserRoleRepository} from "./repositories/UserRoleRepository";
-import { UserRepository } from '../user/repositories/UserRepository';
+import {UserRepository} from "../user/repositories/user.repository";
 
 @Module({
   imports: [TypeOrmModule.forFeature([

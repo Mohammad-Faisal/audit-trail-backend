@@ -1,5 +1,5 @@
-import { Body, Controller, HttpService, Post, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
-import { ApiBody, ApiConsumes, ApiHeader, ApiParam, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Post, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { ApiBody, ApiConsumes, ApiHeader, ApiTags } from '@nestjs/swagger';
 import { ImageService } from './image.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { SuccessResponse } from '../../../models/SuccessResponse';

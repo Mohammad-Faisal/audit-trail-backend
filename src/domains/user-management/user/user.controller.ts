@@ -1,18 +1,17 @@
 import { Body, Controller , Post, Res } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserRequest } from './requests/CreateUserRequest';
-import CommonException from '../../models/CommonException';
-import ErrorCodes from '../../utils/ErrorCodes';
 import { User } from './entities/User';
-import { SuccessResponse } from '../../models/SuccessResponse';
-import { ApiBody } from '@nestjs/swagger';
-import { ConfigService } from '@nestjs/config';
+import { SuccessResponse } from '../../../models/SuccessResponse';
+import {ApiBody, ApiHeader, ApiTags} from '@nestjs/swagger';
 import {GetUsersRequest} from "./requests/GetUsersRequest";
 
+@ApiTags("User")
+@ApiHeader({ name:"authtoken" })
 @Controller('user')
 export class UserController {
 
-  constructor(private userService: UserService , private configService: ConfigService) {}
+  constructor(private userService: UserService) {}
 
   @Post('getUsers')
   async getAllUsers(@Body() request : GetUsersRequest , @Res() response) {

@@ -13,7 +13,7 @@ import { GetFunctionsOfRoleRequest } from './requests/GetFunctionsOfRoleRequest'
 import { UserRoleDetailsRequest } from './requests/UserRoleDetailsRequest';
 import { UserFunctionDetailsRequest } from './requests/UserFunctionDetailsRequest';
 import { AssignRolesToUserRequest } from './requests/AssignRolesToUserRequest';
-import { UserRepository } from '../user/repositories/UserRepository';
+import {UserRepository} from "../user/repositories/user.repository";
 
 @Injectable()
 export class PrivilegeService {
