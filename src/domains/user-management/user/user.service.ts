@@ -34,4 +34,25 @@ export class UserService {
     }
 
 
+    async getUserDetails(request : any):  Promise<Result> {
+
+        const user : User=  await this.userRepository.findOne({where: {firebaseId:request.requesterFirebaseId}
+            , relations:["building" , "flat" , "userRoles" , "community"]});
+
+        let userFunctions =[]
+        if(user){
+            for (const role of user.userRoles) {
+                const functionsForRole = await this.userRoleRepository.findOne({where : {code : role.code} ,
+                    relations:["userFunctions"]});
+                userFunctions = [ ...userFunctions , ...functionsForRole.userFunctions ]
+            }
+            user["userFunctions"] = userFunctions;
+        }
+        const userDetailsResponse = new UsersDetailsResponse(user);
+
+        return Result.success(userDetailsResponse)
+    }
+
+
+
 }
