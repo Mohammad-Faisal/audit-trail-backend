@@ -1,12 +1,14 @@
 import {MiddlewareConsumer, Module, NestModule, RequestMethod} from '@nestjs/common';
-
-import { UserModule } from './domains/user-management/user/user.module';
+import { UserModule } from './domains/user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import {AuthorizationMiddleware} from "./middlewares/authorization.middleware";
 import {ImageModule} from "./domains/misc/image/image.module";
 import {CommonModule} from "./domains/misc/common/common.module";
+import { JwtTokenModule } from './domains/misc/jwt-token/jwt-token.module';
+import { SiteModule } from './domains/site/site.module';
+import { AuditModule } from './domains/audit/audit.module';
 
 @Module({
   imports: [
@@ -32,6 +34,9 @@ import {CommonModule} from "./domains/misc/common/common.module";
     UserModule ,
     CommonModule ,
     ImageModule,
+    JwtTokenModule,
+    SiteModule,
+    AuditModule,
   ],
   controllers: [],
   providers: [],
@@ -43,6 +48,8 @@ export class AppModule  implements NestModule{
     consumer
         .apply(LoggerMiddleware , AuthorizationMiddleware)
         .exclude({ path: 'api/v1/common/getIdToken', method: RequestMethod.POST })
+        .exclude({ path: 'api/v1/user/signIn', method: RequestMethod.POST })
+        .exclude({ path: 'api/v1/user/signUp', method: RequestMethod.POST })
         .forRoutes('*');
   }
 

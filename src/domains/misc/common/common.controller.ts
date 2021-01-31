@@ -9,7 +9,7 @@ export class CommonController {
 
   constructor(private httpService: HttpService , private configService: ConfigService) {}
 
-  @Post('getIdToken')
+  @Post('produceHttpCall')
   async getIdToken(@Res() response) {
 
     const body ={

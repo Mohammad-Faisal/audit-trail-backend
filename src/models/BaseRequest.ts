@@ -3,10 +3,10 @@ import { IsNotEmpty } from 'class-validator';
 export class BaseRequest {
 
     @IsNotEmpty()
-    requesterFirebaseId: string;
+    userId: string;
 
-    //@IsNotEmpty()
-    requesterProfileId: number;
+    @IsNotEmpty()
+    userName: string;
 
     limit: string;
 

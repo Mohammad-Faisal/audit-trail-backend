@@ -1,7 +1,7 @@
 import { IsEmail, IsNotEmpty } from 'class-validator';
 import { ApiModelProperty } from '@nestjs/swagger/dist/decorators/api-model-property.decorator';
 
-export class CreateUserRequest {
+export class SignUpRequest {
 
   @ApiModelProperty()
   @IsNotEmpty()
@@ -9,6 +9,10 @@ export class CreateUserRequest {
 
   @ApiModelProperty()
   @IsNotEmpty()
-  phone: string;
+  email: string;
+
+  @ApiModelProperty()
+  @IsNotEmpty()
+  password: string;
 
 }

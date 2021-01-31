@@ -1,45 +1,21 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response } from 'express';
-import * as admin from 'firebase-admin';
-import {UserService} from "../domains/user-management/user/user.service";
+import { JwtTokenService } from '../domains/misc/jwt-token/jwt-token.service';
+import { JwtPayload } from '../domains/misc/jwt-token/JwtPayload';
 
 
 @Injectable()
 export class AuthorizationMiddleware implements NestMiddleware {
+  constructor(private jwtTokenService: JwtTokenService) {}
 
+  async use(req: Request, res: Response, next: Function)  {
+    const jwtToken: any = req.header('jwtTokenHeader');
+    const verifiedToken: JwtPayload = this.jwtTokenService.verifyToken(jwtToken);
 
-  constructor(private userService: UserService ) {}
-
-  async use(req: Request, res: Response, next: Function) {
-
-    const token: any = req.headers.authtoken;
-
-    let firebaseUid = null
-
-    if(token) {
-      await admin.auth().verifyIdToken(token)
-        .then(function(decodedToken) {
-          console.log('Logged In User Id is ', decodedToken.uid);
-          req.body.requesterFirebaseId = decodedToken.uid;
-          firebaseUid = decodedToken.uid;
-        })
-        .catch(err => {
-          console.log('authentication error occurred ', err.message);
-          //throw new CommonException(ErrorCodes.NOT_AUTHORIZED)
-        });
-
-      if(firebaseUid) {
-        const userProfile  = await this.userService.getUserDetails(req)
-        //console.log("User profile is found  ",userProfile.getValue());
-        if(userProfile) req.body.requesterProfileId = userProfile.getValue().id;
-      }
-
-    }else{
-      console.log("token not found  " , token)
-      //throw new CommonException(ErrorCodes.NOT_AUTHORIZED)
-    }
-
+    req.body.userId = verifiedToken.userId;
+    req.body.userName = verifiedToken.userName;
 
     next();
   }
 }
+
