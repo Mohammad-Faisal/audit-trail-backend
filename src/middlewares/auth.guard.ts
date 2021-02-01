@@ -9,8 +9,6 @@ export class AuthGuard implements CanActivate {
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
 
-    console.log("The request inside guard is " , request.headers.authtoken);
-    //check if this user is of a certain type
 
     return this.validateRequest(request);
   }

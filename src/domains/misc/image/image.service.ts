@@ -43,10 +43,8 @@ export class ImageService {
       .then(
         data => {
           signedURL =  this.configService.get("AWS_S3_BASE_URL") + filePathKey
-          console.log(signedURL);
         } ,
         err => {
-          console.log("error occurred !" , err);
           throw new CommonException(ErrorCodes.AWS_IMAGE_UPLOAD_FAILED)
         }
       )

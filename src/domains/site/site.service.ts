@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { SignUpRequest } from '../user/requests/SignUpRequest';
 import { Result } from '../../models/Result';
-import { UsersAuthenticationResponse } from '../user/responses/UsersAuthenticationResponse';
 import { SiteRepository } from './repositories/site.repository';
 import { CreateSiteRequest } from './requests/CreateSiteRequest';
 import { Site } from './entities/Site';
@@ -53,11 +51,9 @@ export class SiteService {
     const oldSite = await this.siteRepository.findOne(request.id);
     if(!oldSite) throw new CommonException(ErrorCodes.SITE_NOT_FOUND);
 
-    console.log('old site is ' , oldSite);
-    console.log('request is ' , request);
+
     const auditRecord = await this.saveAuditLog('Updated' ,request.userName , request.userId, request.id);
 
-    console.log('audit record is ',auditRecord)
     const keys = ['name' , 'description' , 'region', 'lat' ,'lng']
     const fieldChanges : AuditItem[]= [];
 
@@ -70,7 +66,6 @@ export class SiteService {
 
     const site = await  this.siteRepository.save(oldSite);
 
-    console.log('new site is ' , site);
     await this.auditItemRepository.save(fieldChanges);
 
     return Result.success(site)
@@ -79,7 +74,6 @@ export class SiteService {
   private async saveAuditLog(changeType:string, userName:string,userId:number , siteId: number) {
     const auditDescription = `${changeType} By by ${userName}`;
     const auditRecordModel = new AuditRecord(auditDescription, userId, siteId);
-    console.log('before save ' , auditRecordModel);
     return await this.auditRecordRepository.save(auditRecordModel);
   }
 
