@@ -24,7 +24,7 @@ export class UserService {
 
 
     async signUp(request: SignUpRequest):  Promise<Result> {
-
+        await this.checkIfUserAlreadyExists(request);
         const user = await this.saveUser(request);
         await this.saveUserCredential(user, request);
         const jwtToken = this.generateToken(user);
@@ -33,6 +33,15 @@ export class UserService {
         return Result.success(userAuthenticationResponse)
     }
 
+
+    private async checkIfUserAlreadyExists(request: SignUpRequest) {
+        const oldUser = await this.userRepository.findOne({
+            where: {
+                email: request.email,
+            },
+        });
+        if (oldUser) throw  new CommonException(ErrorCodes.USER_ALREADY_EXISTS);
+    }
 
     async signIn(request: SignInRequest):  Promise<Result> {
 
@@ -63,6 +72,8 @@ export class UserService {
 
 
     private async saveUser(request: SignUpRequest) {
+
+
         const userModel = new User();
         userModel.name = request.name;
         userModel.email = request.email;

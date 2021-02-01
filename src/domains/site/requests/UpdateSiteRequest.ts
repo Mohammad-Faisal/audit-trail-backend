@@ -7,7 +7,7 @@ export class UpdateSiteRequest extends BaseRequest{
 
   @ApiModelProperty()
   @IsNotEmpty()
-  siteId: number;
+  id: number;
 
   @ApiModelProperty()
   @IsNotEmpty()

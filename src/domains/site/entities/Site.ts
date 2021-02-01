@@ -25,7 +25,7 @@ export class Site extends BaseEntity{
     type => AuditRecord,
     record => record.site,
     {
-      eager: true
+      eager: false
     }
   )
   changes: AuditRecord[];

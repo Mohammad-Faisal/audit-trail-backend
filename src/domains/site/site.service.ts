@@ -36,31 +36,29 @@ export class SiteService {
     siteModel.lng = request.lng;
     
     const site = await  this.siteRepository.save(siteModel);
-    await this.saveCreateAuditLog(request, site);
+    await this.saveAuditLog('Created' ,request.userName , request.userId, site.id);
 
     return Result.success(site)
   }
 
-  private async saveCreateAuditLog(request: CreateSiteRequest, site: Site) {
-    const auditDescription = `Created By by ${request.userName} on ${site.createdDate}`;
-    const auditRecordModel = new AuditRecord(auditDescription, request.userId, site.id);
-    await this.auditRecordRepository.save(auditRecordModel);
-  }
 
   async getSites(request: GetSitesRequest):  Promise<Result> {
-    const siteResponse = await  this.siteRepository.find();
+    const siteResponse = await  this.siteRepository.find({relations:['changes']});
     return Result.success(siteResponse)
   }
 
 
   async updateSite(request: UpdateSiteRequest):  Promise<Result> {
 
-    const oldSite = await this.siteRepository.findOne(request.siteId);
+    const oldSite = await this.siteRepository.findOne(request.id);
     if(!oldSite) throw new CommonException(ErrorCodes.SITE_NOT_FOUND);
 
-    const auditRecord = await this.saveUpdateAuditLog(request, oldSite);
+    console.log('old site is ' , oldSite);
+    console.log('request is ' , request);
+    const auditRecord = await this.saveAuditLog('Updated' ,request.userName , request.userId, request.id);
 
-    const keys =Object.keys(oldSite);
+    console.log('audit record is ',auditRecord)
+    const keys = ['name' , 'description' , 'region', 'lat' ,'lng']
     const fieldChanges : AuditItem[]= [];
 
     for(const fieldName of keys){
@@ -71,17 +69,20 @@ export class SiteService {
     }
 
     const site = await  this.siteRepository.save(oldSite);
+
+    console.log('new site is ' , site);
     await this.auditItemRepository.save(fieldChanges);
 
     return Result.success(site)
   }
 
-  private async saveUpdateAuditLog(request: UpdateSiteRequest, oldSite: Site) {
-    const auditDescription = `Updated by ${request.userName} on `;
-    const auditRecordModel = new AuditRecord(auditDescription, request.userId, oldSite.id);
-    const auditRecord = await this.auditRecordRepository.save(auditRecordModel);
-    return auditRecord;
+  private async saveAuditLog(changeType:string, userName:string,userId:number , siteId: number) {
+    const auditDescription = `${changeType} By by ${userName}`;
+    const auditRecordModel = new AuditRecord(auditDescription, userId, siteId);
+    console.log('before save ' , auditRecordModel);
+    return await this.auditRecordRepository.save(auditRecordModel);
   }
+
 
   createAuditItem = ( fieldName:string , oldSite: Site , newRequest: UpdateSiteRequest , auditRecord: AuditRecord ) => {
     return new AuditItem(fieldName , oldSite[`${fieldName}`] , newRequest[`${fieldName}`] , auditRecord.id);

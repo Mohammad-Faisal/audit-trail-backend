@@ -32,11 +32,11 @@ import { AuditModule } from './domains/audit/audit.module';
       envFilePath: `env/${process.env.NODE_ENV || 'development'}.env`
     }),
     UserModule ,
+    SiteModule,
+    AuditModule,
     CommonModule ,
     ImageModule,
     JwtTokenModule,
-    SiteModule,
-    AuditModule,
   ],
   controllers: [],
   providers: [],
@@ -48,8 +48,10 @@ export class AppModule  implements NestModule{
     consumer
         .apply(LoggerMiddleware , AuthorizationMiddleware)
         .exclude({ path: 'api/v1/common/getIdToken', method: RequestMethod.POST })
-        .exclude({ path: 'api/v1/user/signIn', method: RequestMethod.POST })
-        .exclude({ path: 'api/v1/user/signUp', method: RequestMethod.POST })
+        .exclude(
+          { path: 'api/v1/user/signUp', method: RequestMethod.POST } ,
+          { path: 'api/v1/user/signIn', method: RequestMethod.POST }
+          )
         .forRoutes('*');
   }
 

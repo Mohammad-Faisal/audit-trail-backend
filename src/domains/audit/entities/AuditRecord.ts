@@ -11,7 +11,7 @@ export class AuditRecord extends BaseEntity{
   @Column({name:"DESCRIPTION", nullable : false})
   description: string = "";
 
-  @ManyToOne(type => Site, site => site.changes,{ eager: false , onDelete:"CASCADE" })
+  @ManyToOne(type => Site, site => site.changes,{ eager: false })
   site: any;
 
   @ManyToOne(type => User, { eager: false })
@@ -27,7 +27,7 @@ export class AuditRecord extends BaseEntity{
   items: AuditItem[];
 
 
-  constructor(description , userId , siteId) {
+  constructor(description , userId , siteId:number) {
     super();
     this.user = userId;
     this.site = siteId;

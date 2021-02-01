@@ -9,7 +9,9 @@ export class AuthorizationMiddleware implements NestMiddleware {
   constructor(private jwtTokenService: JwtTokenService) {}
 
   async use(req: Request, res: Response, next: Function)  {
-    const jwtToken: any = req.header('jwtTokenHeader');
+    //const jwtToken: string|undefined = req.header('authtoken');
+    const jwtToken: string|undefined = req.body.headers.authtoken;
+
     const verifiedToken: JwtPayload = this.jwtTokenService.verifyToken(jwtToken);
 
     req.body.userId = verifiedToken.userId;

@@ -3,7 +3,7 @@ import { IsNotEmpty } from 'class-validator';
 export class BaseRequest {
 
     @IsNotEmpty()
-    userId: string;
+    userId: number;
 
     @IsNotEmpty()
     userName: string;
